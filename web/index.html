@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0a0b'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='%23e0382b' stroke-width='3.5'/%3E%3C/svg%3E">
+<title>1951 &middot; Relay Panel</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a0b;--line:#2c2c31;--ink:#eae7e0;--dim:#8b8781;--faint:#5d5a55;
+  --red:#e0382b;--amber:#f0a92b;--green:#3ecf72;--blue:#4a9bea;
+  --sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
+}
+html,body{height:100%}
+body{margin:0;color:var(--ink);
+  background:radial-gradient(130% 70% at 50% -15%,#1a1a1e 0%,#0a0a0b 58%),var(--bg);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  display:flex;flex-direction:column;min-height:100dvh;height:100dvh;
+  overscroll-behavior:none;user-select:none;-webkit-user-select:none;
+  -webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+
+/* ---------- header ---------- */
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:calc(10px + var(--st)) 14px 10px;flex:none}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.yr{font-size:11px;letter-spacing:.22em;color:var(--red);border:1px solid rgba(224,56,43,.45);
+  border-radius:5px;padding:5px 6px 4px;line-height:1}
+.ttl{font-size:13px;font-weight:700;letter-spacing:.16em;line-height:1.15;white-space:nowrap}
+.ttl span{color:var(--faint);font-size:9px;letter-spacing:.24em;font-weight:400}
+.pill{display:flex;align-items:center;gap:6px;flex:none;
+  border:1px solid var(--line);background:#141416;border-radius:999px;
+  padding:6px 10px 6px 8px;font-size:9px;letter-spacing:.16em;color:var(--dim)}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none}
+.pill.ok{border-color:rgba(62,207,114,.45);color:var(--green)}
+.pill.ok i{background:var(--green);box-shadow:0 0 8px rgba(62,207,114,.9)}
+.pill.warn{border-color:rgba(240,169,43,.45);color:var(--amber)}
+.pill.warn i{background:var(--amber);box-shadow:0 0 8px rgba(240,169,43,.9)}
+.pill.bad{border-color:rgba(224,56,43,.5);color:var(--red)}
+.pill.bad i{background:var(--red);box-shadow:0 0 8px rgba(224,56,43,.9)}
+.hdr-r{display:flex;align-items:center;gap:8px;flex:none}
+#gear{width:34px;height:34px;flex:none;border:1px solid var(--line);border-radius:10px;
+  background:#141416;color:var(--dim);display:flex;align-items:center;justify-content:center}
+#gear:active{background:#1d1d22;color:var(--ink)}
+
+/* ---------- grid ---------- */
+main{flex:1;min-height:0;overflow-y:auto;padding:0 10px 4px;
+  display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(78px,1fr);
+  gap:9px;align-content:stretch}
+.card{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:7px;
+  padding:11px 12px;border-radius:15px;border:1px solid var(--line);
+  background:linear-gradient(180deg,#1a1a1e 0%,#111114 100%);
+  transition:border-color .15s,box-shadow .18s,transform .07s;text-align:left;overflow:hidden}
+.card:active{transform:scale(.972)}
+.card.wide{grid-column:span 2;flex-direction:row;align-items:center;gap:12px}
+.card.wide .inf{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.row{display:flex;align-items:center;gap:8px;min-width:0}
+.led{width:9px;height:9px;border-radius:50%;background:#3a3a3f;flex:none;
+  box-shadow:inset 0 0 3px #000;transition:background .15s,box-shadow .15s}
+.nm{font-size:14px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;
+  line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card.wide .nm{font-size:17px;letter-spacing:.1em}
+.sb{font-size:9px;letter-spacing:.13em;color:var(--faint);text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:3px;border-radius:2px;background:#26262b;overflow:hidden;flex:none}
+.bar i{display:block;height:100%;width:0;background:var(--amber);transition:width .09s linear}
+.card.on{border-color:rgba(62,207,114,.5);
+  box-shadow:inset 0 0 0 1px rgba(62,207,114,.15),0 12px 28px -20px rgba(62,207,114,.9)}
+.card.on .led{background:var(--green);box-shadow:0 0 10px rgba(62,207,114,.85)}
+.card.on .bar i{width:100%!important;background:var(--green)}
+.card.hot{border-color:rgba(224,56,43,.5)}
+.card.hot .led{background:var(--red);box-shadow:0 0 10px rgba(224,56,43,.85)}
+.card.arming{border-color:var(--amber);box-shadow:inset 0 0 0 1px rgba(240,169,43,.3)}
+.card.cranking{border-color:var(--amber);
+  box-shadow:0 0 0 1px rgba(240,169,43,.5) inset,0 0 22px -6px rgba(240,169,43,.55)}
+.card.cranking .nm{color:var(--amber)}
+.card.dead{opacity:.45}
+
+/* ---------- log + footer ---------- */
+#log{flex:none;height:46px;overflow:hidden;padding:0 14px;
+  font-size:9.5px;line-height:1.45;letter-spacing:.04em;color:var(--faint)}
+#log b{color:var(--dim);font-weight:400}
+#log .on{color:var(--green)}#log .off{color:var(--faint)}
+#log .err{color:var(--red)}
+footer{flex:none;padding:6px 10px calc(10px + var(--sb))}
+#kill{width:100%;height:60px;border-radius:16px;border:1px solid rgba(224,56,43,.55);
+  background:linear-gradient(180deg,rgba(224,56,43,.16),rgba(224,56,43,.06));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  letter-spacing:.2em;font-size:15px;font-weight:700;color:#ff8a7e;
+  transition:transform .07s,background .15s}
+#kill:active{transform:scale(.985);background:rgba(224,56,43,.32)}
+#kill small{font-size:8.5px;letter-spacing:.2em;color:rgba(255,138,126,.6);font-weight:400}
+
+#toast{position:fixed;left:50%;bottom:calc(84px + var(--sb));transform:translate(-50%,14px);
+  background:#1d1d22;border:1px solid var(--line);border-radius:10px;padding:9px 14px;
+  font-size:11px;letter-spacing:.1em;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;
+  max-width:88vw;text-align:center;z-index:20}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- config ---------- */
+dialog{background:#141417;color:var(--ink);border:1px solid var(--line);border-radius:16px;
+  padding:0;width:min(92vw,380px);font:inherit}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+.dlg-h{padding:14px 16px;border-bottom:1px solid var(--line);font-size:11px;
+  letter-spacing:.2em;color:var(--dim)}
+.dlg-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+label{display:block;font-size:9px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;margin-bottom:5px}
+input{width:100%;background:#0c0c0e;border:1px solid var(--line);border-radius:9px;
+  padding:10px 11px;color:var(--ink);font:inherit;font-size:12px}
+input:focus{outline:none;border-color:var(--blue)}
+.dlg-f{display:flex;gap:8px;padding:0 16px 16px}
+.btn{flex:1;padding:11px;border-radius:10px;border:1px solid var(--line);font-size:11px;
+  letter-spacing:.14em;text-align:center;background:#1a1a1e}
+.btn.pri{border-color:rgba(74,155,234,.5);color:var(--blue)}
+.hint{font-size:9.5px;color:var(--faint);line-height:1.6}
+.dlg-b{max-height:62dvh;overflow-y:auto}
+.names{display:flex;flex-direction:column;gap:7px}
+.nrow{display:flex;align-items:center;gap:8px}
+.nrow i{font-style:normal;font-size:9px;color:var(--faint);width:12px;text-align:right;flex:none}
+.nrow input{padding:8px 10px;font-size:12px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="yr">1951</div>
+    <div class="ttl">RAT ROD<br><span>RELAY PANEL</span></div>
+  </div>
+  <div class="hdr-r">
+    <button class="pill" id="pill"><i></i><span>LINK</span></button>
+    <button id="gear" aria-label="Settings" title="Settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="3.2"/>
+        <path d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.4 5.4l1.9 1.9M16.7 16.7l1.9 1.9M18.6 5.4l-1.9 1.9M7.3 16.7l-1.9 1.9"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main id="grid"></main>
+
+<div id="log"></div>
+
+<footer>
+  <button id="kill">ALL OFF<small>CUT EVERY CIRCUIT</small></button>
+</footer>
+
+<div id="toast"></div>
+
+<dialog id="cfg">
+  <div class="dlg-h">SETTINGS</div>
+  <div class="dlg-b">
+    <div id="addrBlock">
+      <label for="inBase">Address</label>
+      <input id="inBase" placeholder="http://192.168.4.1" autocapitalize="off" autocomplete="off" spellcheck="false">
+      <label for="inTok" style="margin-top:12px">Token</label>
+      <input id="inTok" placeholder="api token from the sketch" autocapitalize="off" autocomplete="off" spellcheck="false">
+      <div class="hint" style="margin-top:8px">Leave Address empty when this page is served by the car's WiFi module.</div>
+    </div>
+    <div>
+      <label>Button names</label>
+      <div class="names" id="nameList"></div>
+      <div class="hint" style="margin-top:8px">Saved on this phone. Relay order never changes — only the text on the card.</div>
+    </div>
+  </div>
+  <div class="dlg-f">
+    <button class="btn" id="cfgReset">RESET</button>
+    <button class="btn" id="cfgCancel">CLOSE</button>
+    <button class="btn pri" id="cfgSave">SAVE</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+
+/* ------------------------------------------------------------------ *
+ *  Channel map. Order here = relay 1..8 on the board.
+ *  mode: "latch"     -> tap toggles, stays on
+ *        "momentary" -> press and hold to energise
+ * ------------------------------------------------------------------ */
+const CH = [
+  { name:"Starter",    sub:"hold to crank · 4s max", mode:"momentary", wide:true, hot:true, maxMs:4000 },
+  { name:"Ignition",   sub:"held if link drops",     mode:"latch" },
+  { name:"Fuel Pump",  sub:"held if link drops",     mode:"latch" },
+  { name:"Compressor", sub:"air",                    mode:"latch" },
+  { name:"Fan",        sub:"cooling",                mode:"latch" },
+  { name:"Lights",     sub:"headlamp",               mode:"latch" },
+  { name:"Acc",        sub:"accessory",              mode:"latch" },
+  { name:"Spare",      sub:"aux 8",                  mode:"latch", wide:true },
+];
+
+const HOLD_MS = 700;   // how long you must hold the starter before it energises
+
+/* ---------- storage (a file:// WebView may refuse localStorage) ---------- */
+/* Inside the app the WebView may refuse localStorage for the file:// origin,
+   so ask the native bridge (SharedPreferences) first and mirror to both. */
+const LS = {
+  get(k, d) {
+    if (NATIVE) {
+      try {
+        const v = window.RatRodNative.storeGet(k);
+        if (typeof v === "string" && v !== "") return v;
+      } catch (e) {}
+    }
+    try { return localStorage.getItem(k) ?? d; } catch (e) { return d; }
+  },
+  set(k, v) {
+    if (NATIVE) { try { window.RatRodNative.storeSet(k, v); } catch (e) {} }
+    try { localStorage.setItem(k, v); } catch (e) {}
+  },
+};
+
+/* ------------------------------------------------------------------ *
+ *  Button names: editable from the gear button, saved on this phone.
+ *  Only the label changes — relay order, mode and max-on-time stay put.
+ * ------------------------------------------------------------------ */
+const NAME_KEY   = "rr.names";
+const NAME_MAX   = 18;
+const CH_DEFAULT = CH.map(c => c.name);
+const esc = s => String(s).replace(/[&<>"]/g,
+  c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+
+function loadNames(){
+  let saved = [];
+  try { saved = JSON.parse(LS.get(NAME_KEY, "[]")); } catch (e) { saved = []; }
+  if (!Array.isArray(saved)) return;
+  CH.forEach((c, i) => {
+    const n = saved[i];
+    if (typeof n === "string" && n.trim()) c.name = n.trim().slice(0, NAME_MAX);
+  });
+}
+function storeNames(){ LS.set(NAME_KEY, JSON.stringify(CH.map(c => c.name))); }
+function applyNames(){
+  cards.forEach((el, i) => { el.querySelector(".nm").textContent = CH[i].name; });
+}
+
+/* true when running inside the Android app with the USB-serial bridge */
+const NATIVE = (typeof window.RatRodNative !== "undefined");
+
+const cfg = {
+  base:  LS.get("rr.base",  ""),
+  token: LS.get("rr.token", ""),
+};
+
+/* ---------- runtime state ---------- */
+const st    = new Array(8).fill(0);
+let online  = false;   // controller answered
+let unoLink = false;   // controller can see the Arduino
+let usbOk   = true;    // USB link to the board is open
+let demo    = false;   // no controller found -> local simulation
+let authed  = true;
+let pollT   = null;
+let cards   = [];
+
+const $ = s => document.querySelector(s);
+
+/* ---------- tiny ui helpers ---------- */
+let toastT;
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove("show"), 1600);
+}
+
+const logLines = [];
+function log(msg, cls){
+  const d = new Date();
+  const ts = String(d.getHours()).padStart(2,"0") + ":" +
+             String(d.getMinutes()).padStart(2,"0") + ":" +
+             String(d.getSeconds()).padStart(2,"0");
+  logLines.unshift(`<b>${ts}</b> <span class="${cls||""}">${msg}</span>`);
+  if (logLines.length > 30) logLines.pop();
+  $("#log").innerHTML = logLines.slice(0,3).join("<br>");
+}
+
+function setPill(kind, text){
+  const p = $("#pill");
+  p.className = "pill " + (kind || "");
+  p.querySelector("span").textContent = text;
+}
+
+/* ---------- api ---------- */
+class AuthErr extends Error {}
+
+async function api(path, method){
+  const url = cfg.base.replace(/\/+$/,"") + path;
+  const headers = {};
+  if (cfg.token) headers["X-RR-Token"] = cfg.token;
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 2500);
+  try {
+    const r = await fetch(url, {
+      method: method || "GET",
+      headers,
+      cache: "no-store",
+      signal: ctl.signal,
+      credentials: "omit",
+    });
+    if (r.status === 401) throw new AuthErr();
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return await r.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* ---------- transport ----------
+   Inside the Android app everything goes over the USB cable.
+   Served from a network module, the same calls go over HTTP.            */
+function nativeJson(fn, ...args){
+  const raw = window.RatRodNative[fn](...args);
+  const j = JSON.parse(raw);
+  if (j && j.error) throw new Error(j.error);
+  return j;
+}
+
+async function readStatus(){
+  if (NATIVE){ window.RatRodNative.connect(); return nativeJson("status"); }
+  return api("/api/status");
+}
+async function pushRelay(i, on){
+  if (NATIVE) return nativeJson("relay", i + 1, on ? 1 : 0);
+  return api(`/api/relay?ch=${i + 1}&on=${on ? 1 : 0}`, "POST");
+}
+async function pushAllOff(){
+  if (NATIVE) return nativeJson("allOff");
+  return api("/api/all-off", "POST");
+}
+
+/* ---------- build the panel ---------- */
+function build(){
+  const grid = $("#grid");
+  CH.forEach((c, i) => {
+    const b = document.createElement("button");
+    b.className = "card" + (c.wide ? " wide" : "") + (c.hot ? " hot" : "");
+    b.dataset.i = i;
+    b.innerHTML = `
+      <div class="inf">
+        <div class="row"><span class="led"></span><span class="nm">${esc(c.name)}</span></div>
+        <div class="sb">${c.sub}</div>
+      </div>
+      <div class="bar"><i></i></div>`;
+    if (c.mode === "latch") {
+      b.addEventListener("click", () => toggle(i));
+    } else {
+      wireHold(b, i);
+    }
+    grid.appendChild(b);
+    cards.push(b);
+  });
+}
+
+/* tap-to-toggle */
+async function toggle(i){
+  if (!ready()) return;
+  const want = st[i] ? 0 : 1;
+  await sendRelay(i, !!want);
+}
+
+/* press-and-hold for momentary channels */
+function wireHold(el, i){
+  const bar = el.querySelector(".bar i");
+  const info = el.querySelector(".sb");
+  const label = info.textContent;
+  let raf = null, armT = null, crankT = null, down = false;
+
+  function reset(){
+    cancelAnimationFrame(raf);
+    clearTimeout(armT); clearTimeout(crankT);
+    el.classList.remove("arming","cranking");
+    bar.style.width = st[i] ? "100%" : "0%";
+    info.textContent = label;
+  }
+
+  function start(e){
+    if (e.button > 0) return;
+    if (!ready()) return;
+    down = true;
+    el.classList.add("arming");
+    navigator.vibrate && navigator.vibrate(12);
+    const t0 = performance.now();
+    const tick = () => {
+      const p = Math.min(1, (performance.now() - t0) / HOLD_MS);
+      bar.style.width = (p * 100) + "%";
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    armT = setTimeout(async () => {
+      if (!down) return;
+      info.textContent = "cranking…";
+      el.classList.remove("arming");
+      el.classList.add("cranking");
+      navigator.vibrate && navigator.vibrate([0,40,60,40]);
+      const ok = await sendRelay(i, true);
+      if (!ok) { reset(); return; }
+      crankT = setTimeout(() => {
+        sendRelay(i, false);
+        info.textContent = "released — 4s limit";
+        el.classList.remove("cranking");
+        setTimeout(reset, 1200);
+      }, CH[i].maxMs);
+    }, HOLD_MS);
+  }
+
+  function end(){
+    if (!down) return;
+    down = false;
+    const wasCranking = el.classList.contains("cranking");
+    reset();
+    if (wasCranking) sendRelay(i, false);
+  }
+
+  el.addEventListener("pointerdown", start);
+  el.addEventListener("pointerup", end);
+  el.addEventListener("pointercancel", end);
+  el.addEventListener("pointerleave", end);
+  el.addEventListener("contextmenu", e => e.preventDefault());
+}
+
+/* ---------- commands ---------- */
+function ready(){
+  if (authed === false){ openCfg(); return false; }
+  if (NATIVE){
+    if (!usbOk){ toast("NO USB DEVICE"); return false; }
+    if (!unoLink){ toast("ARDUINO NOT ANSWERING"); return false; }
+    return true;
+  }
+  if (demo){ return true; }
+  if (!online){
+    toast("NO LINK TO CONTROLLER");
+    return false;
+  }
+  return true;
+}
+
+async function sendRelay(i, on){
+  // optimistic so the UI feels instant; status poll corrects it
+  const prev = st[i];
+  st[i] = on ? 1 : 0;
+  paint();
+
+  if (demo){
+    log(`${esc(CH[i].name)} ${on ? "ON" : "OFF"} <b>demo</b>`, on ? "on" : "off");
+    return true;
+  }
+  try {
+    await pushRelay(i, on);
+    log(`${esc(CH[i].name)} ${on ? "ON" : "OFF"}`, on ? "on" : "off");
+    return true;
+  } catch (e) {
+    st[i] = prev;
+    paint();
+    if (e instanceof AuthErr) { authed = false; openCfg(); toast("TOKEN REJECTED"); }
+    else toast(`FAILED: ${CH[i].name.toUpperCase()}`);
+    return false;
+  }
+}
+
+async function allOff(){
+  st.fill(0); paint();
+  if (demo){ log("ALL OFF <b>demo</b>", "err"); return; }
+  try {
+    await pushAllOff();
+    log("ALL OFF", "err");
+  } catch (e) {
+    if (e instanceof AuthErr) { authed = false; openCfg(); }
+    toast("ALL-OFF FAILED — USE THE KILL SWITCH");
+  }
+}
+
+/* ---------- render ---------- */
+function paint(){
+  cards.forEach((el, i) => {
+    const on = !!st[i];
+    el.classList.toggle("on", on);
+    el.classList.toggle("dead", !online && !demo);
+  });
+
+  if (NATIVE){
+    if (!online)        setPill("bad",  "APP LINK");
+    else if (!usbOk)    setPill("bad",  "NO USB");
+    else if (!unoLink)  setPill("warn", "NO MCU");
+    else                setPill("ok",   "USB LINK");
+  }
+  else if (authed === false) setPill("bad",  "TOKEN");
+  else if (demo)             setPill("warn", "DEMO");
+  else if (!online)          setPill("bad",  "OFFLINE");
+  else if (!unoLink)         setPill("warn", "NO MCU");
+  else                       setPill("ok",   "LINKED");
+}
+
+/* ---------- status poll (also acts as the heartbeat) ---------- */
+async function poll(){
+  clearTimeout(pollT);
+  try {
+    const j = await readStatus();
+    if (!Array.isArray(j.ch) || j.ch.length !== 8) throw new Error("bad payload");
+    if (demo) log("controller found", "on");
+    demo = false;
+    authed = true;
+    online = true;
+    usbOk   = j.usb  !== false;
+    unoLink = j.link !== false;
+    for (let i = 0; i < 8; i++) st[i] = j.ch[i] ? 1 : 0;
+    paint();
+  } catch (e) {
+    if (e instanceof AuthErr){
+      authed = false; online = false; unoLink = false; demo = false;
+    } else if (NATIVE) {
+      demo = false; online = false; unoLink = false; usbOk = false;
+    } else {
+      if (!demo) log("controller not answering — demo mode", "err");
+      demo = true; online = false; unoLink = false;
+    }
+    paint();
+  }
+  pollT = setTimeout(poll, demo ? 4000 : 1100);
+}
+
+/* ---------- settings dialog ---------- */
+function nameRows(){
+  const list = $("#nameList");
+  list.innerHTML = "";
+  CH.forEach((c, i) => {
+    const row = document.createElement("div");
+    row.className = "nrow";
+    const num = document.createElement("i");
+    num.textContent = String(i + 1);
+    const inp = document.createElement("input");
+    inp.type = "text";
+    inp.maxLength = NAME_MAX;
+    inp.value = c.name;
+    inp.placeholder = CH_DEFAULT[i];
+    inp.autocapitalize = "off";
+    inp.autocomplete = "off";
+    inp.spellcheck = false;
+    inp.dataset.i = String(i);
+    row.appendChild(num);
+    row.appendChild(inp);
+    list.appendChild(row);
+  });
+}
+
+function openCfg(){
+  $("#addrBlock").style.display = NATIVE ? "none" : "";
+  $("#inBase").value = cfg.base;
+  $("#inTok").value = cfg.token;
+  nameRows();
+  const d = $("#cfg");
+  if (!d.open) d.showModal();
+}
+
+$("#cfgSave").addEventListener("click", () => {
+  cfg.base = $("#inBase").value.trim().replace(/\/+$/,"");
+  cfg.token = $("#inTok").value.trim();
+  LS.set("rr.base", cfg.base);
+  LS.set("rr.token", cfg.token);
+  document.querySelectorAll("#nameList input").forEach(inp => {
+    const i = Number(inp.dataset.i);
+    const v = inp.value.trim().slice(0, NAME_MAX);
+    CH[i].name = v || CH_DEFAULT[i];
+  });
+  storeNames();
+  applyNames();
+  authed = true;
+  $("#cfg").close();
+  log("settings saved");
+  poll();
+});
+$("#cfgReset").addEventListener("click", () => {
+  CH.forEach((c, i) => { c.name = CH_DEFAULT[i]; });
+  storeNames();
+  applyNames();
+  nameRows();
+  toast("NAMES RESTORED");
+});
+$("#cfgCancel").addEventListener("click", () => $("#cfg").close());
+$("#gear").addEventListener("click", openCfg);
+$("#pill").addEventListener("click", () => {
+  if (!NATIVE) return openCfg();
+  toast(!usbOk ? "PLUG IN THE USB CABLE"
+        : !unoLink ? "ARDUINO NOT ANSWERING"
+        : "USB LINK OK");
+});
+$("#kill").addEventListener("click", allOff);
+
+/* starter must never stay energised if the app is backgrounded */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && st[0]) sendRelay(0, false);
+});
+
+loadNames();
+build();
+applyNames();
+paint();
+log("panel ready");
+poll();
+</script>
+</body>
+</html>

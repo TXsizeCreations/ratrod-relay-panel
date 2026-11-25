@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- USB IDs the app will offer to launch for. The Arduino Uno R3 enumerates
+     as a CDC-ACM device via its ATmega16U2: 0x2341 / 0x0043.
+     Clones and other bridges are included so any of them will wake the app. -->
+<resources>
+    <!-- Arduino Uno R3 / Uno -->
+    <usb-device vendor-id="9025" product-id="67" />
+    <usb-device vendor-id="9025" product-id="1" />
+    <!-- Arduino SA (0x2A03) -->
+    <usb-device vendor-id="10755" product-id="67" />
+    <usb-device vendor-id="10755" product-id="1" />
+    <!-- WCH CH340 / CH341 (cheap Nano and Uno clones) -->
+    <usb-device vendor-id="6790" product-id="29987" />
+    <usb-device vendor-id="6790" product-id="21795" />
+    <!-- FTDI FT232 -->
+    <usb-device vendor-id="1027" product-id="24577" />
+    <!-- Silicon Labs CP210x -->
+    <usb-device vendor-id="4292" product-id="60000" />
+</resources>

@@ -1,0 +1,10 @@
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+android/app/src/main/assets/index.html
+
+# build output, not source
+*.apk
+*.log
+.DS_Store
